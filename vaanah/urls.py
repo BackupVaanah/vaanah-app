@@ -54,4 +54,8 @@ urlpatterns = [
     path('dashboard/boutique/', apps.get_app_config('boutique_dashboard').urls),
     path('boutique/', apps.get_app_config('boutique').urls),
 
+    #Paypal url
+    path('checkout/paypal/', include('paypal.express.urls')),
+
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

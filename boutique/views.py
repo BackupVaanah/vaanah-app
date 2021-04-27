@@ -1,9 +1,71 @@
 from django.views import generic
-from oscar.core.loading import get_model, get_classes
+from oscar.core.loading import get_class, get_model, get_classes
 from oscar.views import sort_queryset
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
+from oscar.apps.catalogue.views import CatalogueView
+from django.core.paginator import InvalidPage
+from django.views.generic import DetailView, TemplateView
 
+Product = get_model('catalogue', 'product')
+Category = get_model('catalogue', 'category')
+ProductAlert = get_model('customer', 'ProductAlert')
+ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
+get_product_search_handler_class = get_class(
+    'catalogue.search_handlers', 'get_product_search_handler_class')
+
+(ProductForm,
+ ProductClassSelectForm,
+ ProductSearchForm,
+ ProductClassForm,
+ CategoryForm,
+ StockAlertSearchForm,
+ AttributeOptionGroupForm,
+ OptionForm) \
+    = get_classes('dashboard.catalogue.forms',
+                  ('ProductForm',
+                   'ProductClassSelectForm',
+                   'ProductSearchForm',
+                   'ProductClassForm',
+                   'CategoryForm',
+                   'StockAlertSearchForm',
+                   'AttributeOptionGroupForm',
+                   'OptionForm'))
+(StockRecordFormSet,
+ ProductCategoryFormSet,
+ ProductImageFormSet,
+ ProductRecommendationFormSet,
+ ProductAttributesFormSet,
+ AttributeOptionFormSet) \
+    = get_classes('dashboard.catalogue.formsets',
+                  ('StockRecordFormSet',
+                   'ProductCategoryFormSet',
+                   'ProductImageFormSet',
+                   'ProductRecommendationFormSet',
+                   'ProductAttributesFormSet',
+                   'AttributeOptionFormSet'))
+ProductTable, CategoryTable, AttributeOptionGroupTable, OptionTable \
+    = get_classes('dashboard.catalogue.tables',
+                  ('ProductTable', 'CategoryTable',
+                   'AttributeOptionGroupTable', 'OptionTable'))
+(PopUpWindowCreateMixin,
+ PopUpWindowUpdateMixin,
+ PopUpWindowDeleteMixin) \
+    = get_classes('dashboard.views',
+                  ('PopUpWindowCreateMixin',
+                   'PopUpWindowUpdateMixin',
+                   'PopUpWindowDeleteMixin'))
+PartnerProductFilterMixin = get_class('dashboard.catalogue.mixins', 'PartnerProductFilterMixin')
+Product = get_model('catalogue', 'Product')
+Category = get_model('catalogue', 'Category')
+ProductImage = get_model('catalogue', 'ProductImage')
+ProductCategory = get_model('catalogue', 'ProductCategory')
+ProductClass = get_model('catalogue', 'ProductClass')
+StockRecord = get_model('partner', 'StockRecord')
+StockAlert = get_model('partner', 'StockAlert')
+Partner = get_model('partner', 'Partner')
+AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
+Option = get_model('catalogue', 'Option')
 Product = get_model('catalogue', 'Product')
 
 Partner = get_model('partner', 'Partner')
@@ -54,14 +116,14 @@ class BoutiqueListView(generic.ListView):
 
 
 class BoutiqueDetailView(generic.DetailView):
+    context_object_name1 = "partners"
+    context_object_name2 = "products"
     template_name = 'boutique/boutique_details.html'
     form_class = PartnerAddressForm
     success_url = reverse_lazy('boutique:boutique-list')
     def get_object(self, queryset=None):
         self.partner = get_object_or_404(Partner, pk=self.kwargs['pk'])
         address = self.partner.primary_address
-        patnerId = self.request.GET.get('pk')
-        print(patnerId)
 
         if address is None:
             address = self.partner.addresses.model(partner=self.partner)
@@ -70,27 +132,28 @@ class BoutiqueDetailView(generic.DetailView):
     def get_initial(self):
         return {'name': self.partner.name}
 
+    def get(self, request, *args, **kwargs):
+        try:
+            self.search_handler = self.get_search_handler(
+                self.request.GET, request.get_full_path(), [])
+        except InvalidPage:
+            # Redirect to page one.
+            messages.error(request, _('The given page number was invalid.'))
+            return redirect('catalogue:index')
+        return super().get(request, *args, **kwargs)
+
+    def get_search_handler(self, *args, **kwargs):
+        return get_product_search_handler_class()(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['partner'] = self.partner
         ctx['title'] = self.partner.name
         ctx['users'] = self.partner.users.all()
+        ctx['products'] = ("All products")
+        
+        search_context = self.search_handler.get_search_context_data(
+            self.context_object_name2)
+       
+        ctx.update(search_context)
         return ctx
-
-    def form_valid(self, form):
-        messages.success(
-            self.request, _("Partner '%s' was updated successfully.") %
-            self.partner.name)
-        self.partner.name = form.cleaned_data['name']
-        self.partner.save()
-        return super().form_valid(form)
-    
-    def get_queryset(self):
-        """
-        Build the queryset for this list
-        """
-        queryset = Product.objects.browsable_dashboard().base_queryset()
-        queryset = self.filter_queryset(queryset)
-        queryset = self.apply_search(queryset)
-        return queryset
-        print(queryset)
