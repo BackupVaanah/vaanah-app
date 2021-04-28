@@ -104,7 +104,7 @@
         <p>
             <b class="h1">{{ product.stockrecords.get.partner.name }}</b> 
             <button class="btn btn-secondary ml-5" > 
-                <a href="{% url 'stores:index' %}"  style="color: white; ">Visit the store</a> 
+                <a href="{% url 'boutique:details' pk=product.stockrecords.get.partner.pk  %}"  style="color: white; ">Visit the store</a> 
             </button>
         </p>
     {% endblock %}
