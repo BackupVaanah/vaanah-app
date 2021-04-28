@@ -26,6 +26,8 @@ from apps.user import views
 
 from apps.customer import views 
 from account.views import VerifyEmail
+#from apps import store_view 
+#from boutique import views
 
 #from apps import store_view 
 #from boutique import views
@@ -36,6 +38,13 @@ urlpatterns = [
     # from documantation site
     path('i18n/', include('django.conf.urls.i18n')),
     path('', include(apps.get_app_config('oscar').urls[0])),
+
+    path('email-verify/', VerifyEmail.as_view(), name='email-verify'),
+    #password-reset urls
+    path('', auth_views.PasswordResetCompleteView.as_view(template_name='communication/emails/password_reset_complete.html' ), name='commtype_password_reset_body'),
+
+
+
     # django-stores
     # adds URLs for the dashboard store manager
     path('dashboard/stores/', apps.get_app_config('stores_dashboard').urls),
