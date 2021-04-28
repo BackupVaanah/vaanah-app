@@ -1,9 +1,14 @@
 {% extends "oscar/layout_2_col.html" %}
 
+{% load history_tags %}
+{% load currency_filters %}
+{% load reviews_tags %}
+{% load product_tags %}
 {% load basket_tags %}
 {% load category_tags %}
-{% load product_tags %}
+{% load display_tags %}
 {% load i18n %}
+{% load purchase_info_tags %}
 
 {% block title %}
     {% if summary %}{{ summary }} |{% endif %} {{ block.super }}
@@ -96,7 +101,9 @@
             <div>
                 <ol class="row list-unstyled ml-0 pl-0">
                     {% for product in products %}
-                        <li class="col-sm-6 col-md-4 col-lg-3">{% render_product product %}</li>
+                        {% if product.stockrecords.get.partner.users.first.is_active %}
+                            <li class="col-sm-6 col-md-4 col-lg-3">{% render_product product %}</li>
+                        {% endif %}
                     {% endfor %}
                 </ol>
                 {% include "oscar/partials/pagination.html" %}

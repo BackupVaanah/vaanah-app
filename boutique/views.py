@@ -90,6 +90,7 @@ class BoutiqueListView(generic.ListView):
 
         self.description = ("All boutiques")
 
+
         # We track whether the queryset is filtered to determine whether we
         # show the search form 'reset' button.
         self.is_filtered = False
@@ -103,7 +104,6 @@ class BoutiqueListView(generic.ListView):
             qs = qs.filter(name__icontains=data['name'])
             self.description = _("Partners matching '%s'") % data['name']
             self.is_filtered = True
-
         return qs
 
     def get_context_data(self, **kwargs):
@@ -111,6 +111,21 @@ class BoutiqueListView(generic.ListView):
         ctx['queryset_description'] = self.description
         ctx['form'] = self.form
         ctx['is_filtered'] = self.is_filtered
+
+        activPartner = []
+        partners = self.model._default_manager.all()
+        # print(partners)
+
+        # Only first user in partner user is verified because it's the main user (boutique owner)
+        for partner in partners:
+            if partner.users.all() and partner.users.first().is_active:
+                activPartner.append(partner)
+                # print(activPartner)
+            # else:
+            #     print("inac :" ,partner)
+           
+
+        ctx['activPartner'] = activPartner
         return ctx
 
 
@@ -151,7 +166,7 @@ class BoutiqueDetailView(generic.DetailView):
         ctx['title'] = self.partner.name
         ctx['users'] = self.partner.users.all()
         ctx['products'] = ("All products")
-        
+
         search_context = self.search_handler.get_search_context_data(
             self.context_object_name2)
        
