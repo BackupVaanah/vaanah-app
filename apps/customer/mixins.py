@@ -63,8 +63,8 @@ class RegisterUserMixin(CoreRegisterUserMixin):
         current_site = get_current_site(self.request).domain
         relativeLink = reverse('email-verify')
         absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
-        email_body = 'Hi '+user.first_name+' Use link below to verify your email \n '+absurl
-        data = {'email_body':email_body,'to_email':user.email,'email_subject':'Verify your email'}
+        email_body = 'Hi '+user.first_name+'. You\'re receiving this e-mail because you registrated at Vaana.\n Please click to the following link to activate your account: \n <a href="'+absurl+'" class="btn-primary">Activate your account</a>'
+        data = {'email_body':email_body,'to_email':user.email,'email_subject':'Account activation.'}
         Util.send_email(data)
         #self.send_registration_email(user)
         # print('==============================',user.is_active)

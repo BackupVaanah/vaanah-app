@@ -49,6 +49,19 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
             user.save()
         return user
 
+# class EmailAuthenticationForm(CoreEmailUserCreationForm):
+#     username = forms.CharField(label=_("Email or username"))
+#     redirect_url = forms.CharField(
+#         widget=forms.HiddenInput, required=False)
+
+    # def __init__(self, host, *args, **kwargs):
+    #     self.host = host
+    #     super().__init__(*args, **kwargs)
+
+    # def clean_redirect_url(self):
+    #     url = self.cleaned_data['redirect_url'].strip()
+    #     if url and url_has_allowed_host_and_scheme(url, self.host):
+    #         return url
 
 
 class EmailOrUsernameModelBackend(AuthenticationForm):
