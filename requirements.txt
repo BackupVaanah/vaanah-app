@@ -3,11 +3,13 @@ Babel==2.9.0
 behave==1.2.6
 certifi==2020.12.5
 chardet==4.0.0
-Django==3.1.7
+Django==2.2.20
 django-countries==7.1
 django-extra-views==0.13.0
 django-haystack==3.0
+django-localflavor==3.0.1
 django-oscar==3.0.2
+django-oscar-paypal==2.0.0
 django-oscar-stores==3.0
 django-phonenumber-field==3.0.1
 django-tables2==2.3.4
@@ -28,6 +30,7 @@ purl==1.5
 pycountry==20.7.3
 PyJWT==2.0.1
 python-dateutil==2.8.1
+python-stdnum==1.16
 pytz==2021.1
 requests==2.25.1
 selenium==3.141.0
