@@ -158,6 +158,7 @@ INSTALLED_APPS = [
     'account',
     'boutique.apps.BoutiqueConfig',
     'boutique.dashboard.apps.DashboardConfig',
+    'paypal',
 ] 
 
 # from documentation site
@@ -293,3 +294,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+#Paypal credentials
+PAYPAL_API_USERNAME = 'sb-verbm2286252_api1.business.example.com'
+PAYPAL_API_PASSWORD = 'VK5PJSN66Z6PH7WS'
+PAYPAL_API_SIGNATURE = 'A5CaGfEYV6CZbq5iw-8srT.yLqwsAksnEdZqGE9r-tvdTJDDqzld6ZHT'
+

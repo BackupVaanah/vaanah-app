@@ -1,6 +1,7 @@
 {% extends "oscar/layout.html" %}
-{% load i18n %}
+{% load basket_tags %}
 {% load product_tags %}
+{% load i18n %}
 {% block title %}
 {% trans "Boutiques" %} | {{ block.super }}
 {% endblock %}
@@ -13,17 +14,43 @@
             <li class="breadcrumb-item" aria-current="page">
               <a href="{% url 'boutique:index' %}">{% trans "Boutiques" %}</a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">{{ boutique.name }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ partner.name }}</li>
         </ol>
     </nav>
 {% endblock %}
-{% block headertext %}
-    {% trans "Boutique" %}
-{% endblock %}
+
 {% block content %}
-    <p>
-      <h2>{{ boutique.name }}</h2> <br>
-      The boutique is in: {{ boutique.city }} <br>
-      The boutique's manager is Mr/Mrs: <strong>{{ boutique.manager }} </strong>
-    </p>
+    <h2>{{ partner.name }}</h2>
+    {% with addresses=partner.addresses.all %}
+        {% if addresses %}
+            {% for address in addresses %}
+                <p>{{ address.summary }}</p><br>
+            {% endfor %}
+        {% else %}
+            <p>{% trans 'No address associated.' %}</p><br>
+        {% endif %}
+    {% endwith %}
+
+    {% if products %}
+        <section>
+            <div>
+                <ol class="row list-unstyled ml-0 pl-0">
+                    {% for product in products %}
+                        {% if product.stockrecords.get.partner.name == partner.name  %}
+                            <li class="col-sm-6 col-md-4 col-lg-3">{% render_product product %}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
+                {% include "oscar/partials/pagination.html" %}
+            </div>
+        </section>
+    {% else %}
+        <p class="nonefound">{% trans "No products found." %}</p>
+    {% endif %}
+
 {% endblock content %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    oscar.search.init();
+{% endblock %}
