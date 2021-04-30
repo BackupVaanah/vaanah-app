@@ -1,41 +1,4 @@
-Skip to content
-Search or jump to…
 
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@BadaraDiakhate 
-vaanah
-/
-vaanah-app
-0
-01
-Code
-Issues
-1
-Pull requests
-3
-Actions
-Projects
-Wiki
-Security
-1
-Insights
-Settings
-vaanah-app/vaanah/urls.py /
-
-Fatma Gaye LO reports
-Latest commit dee4eb8 7 minutes ago
- History
- 3 contributors
-@FatmaGayeLO@AbdoulayeNDAO121@BadaraDiakhate
-We found potential security vulnerabilities in your dependencies.
-You can see this message because you have been granted access to Dependabot alerts for this repository.
-
-64 lines (49 sloc)  2.2 KB
- 
 """vaanah URL Configuration
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
@@ -95,20 +58,8 @@ urlpatterns = [
     path('boutique/', apps.get_app_config('boutique').urls),
 
     #Paypal url
+    
     path('checkout/paypal/', include('paypal.express.urls')),
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-© 2021 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-Loading complete
