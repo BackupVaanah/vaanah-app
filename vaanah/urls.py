@@ -58,6 +58,7 @@ urlpatterns = [
     path('boutique/', apps.get_app_config('boutique').urls),
 
     #Paypal url
+    
     path('checkout/paypal/', include('paypal.express.urls')),
 
 
