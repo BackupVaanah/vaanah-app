@@ -76,22 +76,22 @@ LANGUAGES = [
 
 #Adding stores and admin to dashboard nav bar
 OSCAR_DASHBOARD_NAVIGATION += [
-    {
-        'label': _('Store manager'),
-        'icon': 'fa fa-store',
-        'url_name': 'stores-dashboard:store-list',
-    },
+    # {
+    #     'label': _('Store manager'),
+    #     'icon': 'fa fa-store',
+    #     'url_name': 'stores-dashboard:store-list',
+    # },
     {
         'label': _('Admin site'),
         'icon': 'fas fa-lock',
         'url_name': 'admin:index',
         'access_fn': lambda user, url_name, url_args, url_kwargs: user.is_staff,
     },
-    {
-    'label': _('Boutiques'),
-    'icon': 'fas fa-store',
-    'url_name': 'boutique-dashboard:boutique-list',
-    }
+    # {
+    # 'label': _('Boutiques'),
+    # 'icon': 'fas fa-store',
+    # 'url_name': 'boutique-dashboard:boutique-list',
+    # }
 ]
 
 
